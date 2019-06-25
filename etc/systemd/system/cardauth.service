@@ -1,0 +1,12 @@
+
+[Unit]
+Description = card auth
+
+[Service]
+User=pi
+ExecStart = /home/pi/automatic_door_unlocking/main.sh
+#Restart = always
+Type = simple
+
+[Install]
+WantedBy = multi-user.target
