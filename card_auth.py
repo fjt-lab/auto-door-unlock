@@ -5,6 +5,10 @@ import binascii
 import nfc
 import sys
 
+import time
+import schedule
+import threading
+
 from card_hash import sha512
 from authenticated_cards import authenticated_cards
 
@@ -58,15 +62,33 @@ def connected(tag):
         return True
     
     return False
-        
-def check():
+
+def reset_log(dat):
+    for i in range(len(dat)):
+        if dat[i][1] == "1":    #入室フラグが立っているとき
+            dat[i][1] = "0"
+            dat[i][2] = ""
+            dat[i][3] = "_SYSTEM_EXIT_"
+            add_log.write_log(dat, dat[i][0])
+
+def main_thread():
     clf = nfc.ContactlessFrontend('usb')    
     while clf.connect(rdwr={
         'on-startup': startup,
         'on-connect': connected,}):
         pass
+    
+def sub_thread():
+    schedule.every().day.at("20:00").do(reset_log, dat)
 
+    while True:
+        schedule.run_pending()
+        time.sleep(10)
 
 if __name__ == "__main__":
     dat = init()
-    check()
+    
+    thread_1 = threading.Thread(target=main_thread)
+    thread_2 = threading.Thread(target=sub_thread)
+    thread_1.start()
+    thread_2.start()
