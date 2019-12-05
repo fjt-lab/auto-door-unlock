@@ -79,6 +79,8 @@ def main_thread():
         pass
     
 def sub_thread():
+    usrid = "system"
+    schedule.every().day.at("07:00").do(add_log.s_write_log)
     schedule.every().day.at("20:00").do(reset_log, dat)
 
     while True:

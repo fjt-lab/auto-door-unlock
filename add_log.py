@@ -44,7 +44,15 @@ def check_log():
         f.close()
     return path
 
-#ログをファイルに書き込み
+#今日の日付をファイルに書き込み
+def s_write_log():
+    f = open(check_log(), mode = "a")
+    dt_now = datetime.datetime.now()
+    sent = "   " + dt_now.strftime('%Y/%m/%d') + "\n"
+    
+    f.write(sent)
+    f.close()
+
 def write_log(dat, usrid):
     f = open(check_log(), mode = "a")
     logs = ""
